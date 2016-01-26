@@ -39,8 +39,17 @@ pageSchema.statics.findByTag = function(tag) {
   return this.find({tags: {$elemMatch: {$eq: tag}}});
  };
 
- pageSchema.methods.findSimilar = function(tag, urlTitle) {
-  return this.find({tags: {$elemMatch: {$eq: tag}}, urlTitle: {$elemMatch: {$neq: urlTitle}}});
+ pageSchema.methods.findSimilar = function() {
+
+  return Page.find({
+    tags: {
+      $in: this.tags
+    },
+    _id: {
+      $ne: this._id
+    }
+  }).exec();
+
  };
 
 var userSchema = new Schema({

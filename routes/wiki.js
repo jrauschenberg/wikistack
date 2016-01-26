@@ -10,11 +10,9 @@ router.get("/", function(req, res, next) {
 });
 
 router.post("/", function(req, res, next) {
-  var content = req.body.pageContent;
-  var title = req.body.title;
   var page = new Page({
-    title: title,
-    content: content,
+    title: req.body.title,
+    content: req.body.pageContent,
     tags: req.body.tags.split(" ")
   });
   page.save(function(err) {
@@ -22,14 +20,20 @@ router.post("/", function(req, res, next) {
   }).then(function(result) {res.redirect(result.urlTitle);});
 });
 
-router.get("/similar", function(req, res, next) {
+router.get("/:pageUrl/similar", function(req, res, next) {
+  Page.findOne({ urlTitle: req.params.pageUrl})
+  .then(function(page){
+    return page.findSimilar();
+  })
+  .then(function(pages) {
+     res.render('index', {pages: pages});
+  });
   
 });
 
 router.get("/search", function(req, res, next) {
   Page.findByTag(req.query.tag).exec()
   .then(function(result) {
-    console.log(result);
     res.render('index.html', {pages: result} );
   });
 });

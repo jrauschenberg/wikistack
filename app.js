@@ -7,7 +7,7 @@ var path = require('path');
 var swig = require('swig');
 require('./filters')(swig);
 var wikiRouter  = require('./routes/wiki.js');
-var homeRouter = require('./routes/home.js')
+var homeRouter = require('./routes/home.js');
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({extended: true}));
